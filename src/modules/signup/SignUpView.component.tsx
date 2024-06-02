@@ -1,31 +1,32 @@
 'use client'
-import { Button, Card, Flex, Form, Input, Spin, Typography } from 'antd';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Button, Card, Flex, Form, Input, Spin, Typography } from 'antd'
+import Link from 'next/link'
 
-const { Title } = Typography;
+const { Title } = Typography
 
 export const SignUpView = () => {
-  const router = useRouter();
-
-  const onFinish = async (values: any) => {
-    router.push('/signin');
-  };
+  const onFinish = async (values: any) => {}
 
   return (
     <Spin spinning={false}>
       <Card>
         <Title level={1}>Daftar</Title>
-        <Form name="login" onFinish={onFinish} autoComplete="off" layout="vertical">
+        <Form
+          name="login"
+          onFinish={onFinish}
+          autoComplete="off"
+          layout="vertical"
+        >
           <Form.Item
             label="Name"
             name="name"
             rules={[
               {
                 required: true,
-                message: 'Please input your name!'
-              }
-            ]}>
+                message: 'Please input your name!',
+              },
+            ]}
+          >
             <Input />
           </Form.Item>
           <Form.Item
@@ -35,9 +36,10 @@ export const SignUpView = () => {
               {
                 required: true,
                 message: 'Please input your email!',
-                type: 'email'
-              }
-            ]}>
+                type: 'email',
+              },
+            ]}
+          >
             <Input />
           </Form.Item>
 
@@ -47,13 +49,14 @@ export const SignUpView = () => {
             rules={[
               {
                 required: true,
-                message: 'Please input your password!'
+                message: 'Please input your password!',
               },
               {
                 min: 6,
-                message: 'Password minimum 6 character!'
-              }
-            ]}>
+                message: 'Password minimum 6 character!',
+              },
+            ]}
+          >
             <Input.Password />
           </Form.Item>
           <Form.Item
@@ -64,25 +67,32 @@ export const SignUpView = () => {
             rules={[
               {
                 required: true,
-                message: 'Please confirm your password!'
+                message: 'Please confirm your password!',
               },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('password') === value) {
-                    return Promise.resolve();
+                    return Promise.resolve()
                   }
                   return Promise.reject(
-                    new Error('The new password that you entered do not match!')
-                  );
-                }
-              })
-            ]}>
+                    new Error(
+                      'The new password that you entered do not match!',
+                    ),
+                  )
+                },
+              }),
+            ]}
+          >
             <Input.Password />
           </Form.Item>
 
           <Form.Item>
             <Flex vertical gap={5}>
-              <Button type="primary" htmlType="submit" loading={status === 'loading'} block>
+              <Button
+                type="primary"
+                htmlType="submit"
+                block
+              >
                 Daftar
               </Button>
               <span>
@@ -93,5 +103,5 @@ export const SignUpView = () => {
         </Form>
       </Card>
     </Spin>
-  );
-};
+  )
+}
