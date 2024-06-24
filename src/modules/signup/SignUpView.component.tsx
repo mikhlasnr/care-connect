@@ -8,40 +8,59 @@ import {
   Spin,
   Typography,
   Tabs,
-  Dropdown,
-  Space,
-  MenuProps,
+  Radio,
+  RadioChangeEvent,
+  message,
 } from 'antd'
 import Link from 'next/link'
+import { useState } from 'react'
 
 const { Title } = Typography
+const { TabPane } = Tabs
 
 export const SignUpView = () => {
-  const onFinish = async (values: any) => {}
-  const { TabPane } = Tabs
-  const onChange = (key: string) => {
-    console.log(key)
+  const [form] = Form.useForm()
+  const [activeTabKey, setActiveTabKey] = useState('1')
+  const [isTab2Enabled, setIsTab2Enabled] = useState(false)
+  const [gender, setGender] = useState('Pria')
+  const [messageApi, contextHolder] = message.useMessage()
+
+  const onChange = (e: RadioChangeEvent) => {
+    console.log('radio checked', e.target.value)
+    setGender(e.target.value)
   }
 
-  const items: MenuProps['items'] = [
+  const success = () => {
+    messageApi.open({ type: 'success', content: 'Data berhasil dibuat' })
+  }
+
+  const onFinish = (values: any) => {
+    console.log('Received values from form: ', values)
+    setIsTab2Enabled(true)
+    setActiveTabKey('2')
+  }
+
+  const items = [
     {
-      label: 'Laki-laki',
-      key: '0',
+      label: 'Pria',
+      value: 'Pria',
     },
     {
-      label: 'Perempuan',
-      key: '1',
+      label: 'Wanita',
+      value: 'Wanita',
     },
   ]
 
   return (
     <>
+      {contextHolder}
       <Title level={2}>Registrasi Pasien</Title>
-      <Tabs defaultActiveKey="2">
+      <Tabs activeKey={activeTabKey} onChange={setActiveTabKey}>
         <TabPane tab="Akun" key="1">
           <Spin spinning={false}>
             <Card>
               <Form
+                form={form}
                 name="register"
                 onFinish={onFinish}
                 autoComplete="off"
@@ -78,7 +97,7 @@ export const SignUpView = () => {
                   <Input.Password />
                 </Form.Item>
                 <Form.Item
-                  name="confirm"
+                  name="confirmPassword"
                   label="Confirm Password"
                   dependencies={['password']}
                   hasFeedback
@@ -119,7 +138,7 @@ export const SignUpView = () => {
             </Card>
           </Spin>
         </TabPane>
-        <TabPane tab="Info Pribadi" key="2">
+        <TabPane tab="Info Pribadi" key="2" disabled={!isTab2Enabled}>
           <Card>
             <Form
               name="info-pribadi"
@@ -163,23 +182,12 @@ export const SignUpView = () => {
               >
                 <Input />
               </Form.Item>
-              <Form.Item
-                label="Jenis Kelamin"
-                name="gender"
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please choose your gender!',
-                  },
-                ]}
-              >
-                <Dropdown menu={{ items }} trigger={['click']}>
-                  <Button block>
-                    <a onClick={(e) => e.preventDefault()}>
-                      <Space>Pilih Jenis Kelamin</Space>
-                    </a>
-                  </Button>
-                </Dropdown>
+              <Form.Item label="Jenis Kelamin">
+                <Radio.Group
+                  options={items}
+                  onChange={onChange}
+                  value={gender}
+                />
               </Form.Item>
               <Form.Item
                 label="No. BPJS"
@@ -193,7 +201,7 @@ export const SignUpView = () => {
               >
                 <Input />
               </Form.Item>
-              <Button type="primary" htmlType="submit" block>
+              <Button type="primary" htmlType="submit" block onClick={success}>
                 Daftar
               </Button>
             </Form>
